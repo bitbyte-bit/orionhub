@@ -14,10 +14,12 @@ import BusinessRegistration from './components/BusinessRegistration';
 import ProductManagement from './components/ProductManagement';
 import Negotiations from './components/Negotiations';
 import Marketplace from './components/Marketplace';
+import Cart from './components/Cart';
 import Settings from './components/Settings';
 import ErrorBoundary from './components/ErrorBoundary';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -116,6 +118,18 @@ function AppContent() {
           }
         />
         <Route
+          path="/cart"
+          element={
+            user ? (
+              <Layout user={user}>
+                <Cart />
+              </Layout>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
           path="/settings"
           element={
             user ? (
@@ -139,7 +153,9 @@ export default function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <AppContent />
+        <CartProvider>
+          <AppContent />
+        </CartProvider>
       </AuthProvider>
     </ErrorBoundary>
   );

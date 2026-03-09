@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Store, MessageSquare, Settings, LogOut, Menu, X, User as UserIcon, Plus } from 'lucide-react';
+import { LayoutDashboard, Store, MessageSquare, Settings, LogOut, Menu, X, User as UserIcon, Plus, ShoppingCart } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { APP_NAME } from '../constants';
 import { authApi } from '../services/api';
 import toast from 'react-hot-toast';
+import { useCart } from '../context/CartContext';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,6 +13,7 @@ interface LayoutProps {
 }
 
 export default function Layout({ children, user }: LayoutProps) {
+  const { totalItems } = useCart();
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -39,14 +41,44 @@ export default function Layout({ children, user }: LayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
-      {/* Mobile Sidebar Toggle */}
-      <button
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-md"
-      >
-        {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
+    <div className="min-h-screen bg-slate-50 flex flex-col lg:flex-row">
+      {/* Top Header */}
+      <header className="lg:hidden sticky top-0 z-50 bg-white border-b border-slate-200 px-4 py-2.5 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors"
+          >
+            {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+          <Link to="/marketplace" className="flex items-center gap-1.5">
+            <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-xs">
+              Z
+            </div>
+            <span className="text-sm font-bold gradient-text">{APP_NAME}</span>
+          </Link>
+        </div>
+        <Link to="/cart" className="relative p-2 hover:bg-slate-100 rounded-full transition-colors">
+          <ShoppingCart size={20} className="text-slate-600" />
+          {totalItems > 0 && (
+            <span className="absolute top-0 right-0 w-4 h-4 bg-primary text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+              {totalItems}
+            </span>
+          )}
+        </Link>
+      </header>
+
+      {/* Desktop Header (Optional, but good for consistency) */}
+      <header className="hidden lg:flex fixed top-0 right-0 left-56 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-2.5 items-center justify-end">
+        <Link to="/cart" className="relative p-2 hover:bg-slate-100 rounded-full transition-colors">
+          <ShoppingCart size={18} className="text-slate-600" />
+          {totalItems > 0 && (
+            <span className="absolute top-0 right-0 w-4 h-4 bg-primary text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+              {totalItems}
+            </span>
+          )}
+        </Link>
+      </header>
 
       {/* Sidebar */}
       <aside
@@ -111,7 +143,7 @@ export default function Layout({ children, user }: LayoutProps) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 lg:ml-56 min-h-screen">
+      <main className="flex-1 lg:ml-56 min-h-screen pt-0 lg:pt-12">
         <div className="p-3 md:p-5 max-w-7xl mx-auto">
           <AnimatePresence mode="wait">
             <motion.div

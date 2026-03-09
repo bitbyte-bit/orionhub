@@ -1,13 +1,15 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Search, Filter, ShoppingBag, MessageSquare, DollarSign, Tag, Info } from 'lucide-react';
+import { Search, Filter, ShoppingBag, MessageSquare, DollarSign, Tag, Info, ShoppingCart } from 'lucide-react';
 import { productApi, negotiationApi } from '../services/api';
 import { Product } from '../types';
 import { PRODUCT_CATEGORIES } from '../constants';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 
 export default function Marketplace() {
+  const { addToCart } = useCart();
   const [products, setProducts] = React.useState<Product[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [searchTerm, setSearchTerm] = React.useState('');
@@ -142,13 +144,25 @@ export default function Marketplace() {
                   {product.stock} left
                 </div>
               </div>
-              <button 
-                onClick={() => handleStartNegotiation(product)}
-                className="w-full btn-primary py-1 text-[10px] flex items-center justify-center gap-1"
-              >
-                <MessageSquare size={12} />
-                Negotiate
-              </button>
+              <div className="grid grid-cols-2 gap-1.5">
+                <button 
+                  onClick={() => handleStartNegotiation(product)}
+                  className="w-full btn-secondary py-1 text-[9px] flex items-center justify-center gap-1"
+                >
+                  <MessageSquare size={10} />
+                  Negotiate
+                </button>
+                <button 
+                  onClick={() => {
+                    addToCart(product);
+                    toast.success('Added to cart');
+                  }}
+                  className="w-full btn-primary py-1 text-[9px] flex items-center justify-center gap-1"
+                >
+                  <ShoppingCart size={10} />
+                  Add to Cart
+                </button>
+              </div>
             </div>
           </motion.div>
         ))}
