@@ -116,6 +116,10 @@ export const negotiationApi = {
   update: async (id: string, data: any) => {
     const response = await api.put(`/api/negotiations/${id}`, data);
     return response.data;
+  },
+  delete: async (id: string) => {
+    const response = await api.delete(`/api/negotiations/${id}`);
+    return response.data;
   }
 };
 

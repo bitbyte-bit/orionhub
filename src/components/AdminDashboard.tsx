@@ -31,6 +31,9 @@ export default function AdminDashboard() {
   const [commissionRate, setCommissionRate] = React.useState('');
   const [searchTerm, setSearchTerm] = React.useState('');
 
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = React.useState(false);
+  const [confirmAction, setConfirmAction] = React.useState<{ userId: string, status: string } | null>(null);
+
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -63,9 +66,28 @@ export default function AdminDashboard() {
   };
 
   const handleUserStatus = async (userId: string, status: string) => {
+    if (status === 'banned' || status === 'suspended') {
+      setConfirmAction({ userId, status });
+      setIsConfirmModalOpen(true);
+      return;
+    }
+    
     try {
       await adminApi.updateUserStatus(userId, status);
       toast.success(`User status updated to ${status}`);
+      fetchData();
+    } catch (error) {
+      toast.error('Failed to update user status');
+    }
+  };
+
+  const executeStatusUpdate = async () => {
+    if (!confirmAction) return;
+    try {
+      await adminApi.updateUserStatus(confirmAction.userId, confirmAction.status);
+      toast.success(`User status updated to ${confirmAction.status}`);
+      setIsConfirmModalOpen(false);
+      setConfirmAction(null);
       fetchData();
     } catch (error) {
       toast.error('Failed to update user status');
@@ -248,6 +270,40 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      {isConfirmModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-xl shadow-xl w-full max-w-xs overflow-hidden p-4"
+          >
+            <div className="flex items-center gap-2 mb-2 text-rose-600">
+              <AlertTriangle size={18} />
+              <h3 className="text-sm font-bold">Confirm Action</h3>
+            </div>
+            <p className="text-[11px] text-slate-600 mb-4">
+              Are you sure you want to <span className="font-bold uppercase">{confirmAction?.status}</span> this user? 
+              This will restrict their access to the platform.
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setIsConfirmModalOpen(false)}
+                className="flex-1 px-3 py-1.5 rounded-lg border border-slate-200 text-[10px] font-medium hover:bg-slate-50 transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={executeStatusUpdate}
+                className="flex-1 bg-rose-600 text-white px-3 py-1.5 rounded-lg text-[10px] font-medium hover:bg-rose-700 transition-all"
+              >
+                Confirm
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }

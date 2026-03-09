@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, Send, DollarSign, Clock, CheckCircle2, XCircle, MoreVertical, User as UserIcon, MessageSquare } from 'lucide-react';
+import { Search, Send, DollarSign, Clock, CheckCircle2, XCircle, MoreVertical, User as UserIcon, MessageSquare, Trash2, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import { negotiationApi } from '../services/api';
@@ -15,6 +15,9 @@ export default function Negotiations() {
   const [offerPrice, setOfferPrice] = React.useState('');
   const [loading, setLoading] = React.useState(true);
   const [searchTerm, setSearchTerm] = React.useState('');
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+  const [isRejectModalOpen, setIsRejectModalOpen] = React.useState(false);
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
@@ -51,7 +54,7 @@ export default function Negotiations() {
 
     const newMessage: Message = {
       id: Math.random().toString(36).substr(2, 9),
-      senderId: 'current-user-id', // In a real app, this should be the actual user ID
+      senderId: user?.uid || 'current-user-id',
       text: message.trim(),
       timestamp: Date.now(),
       offerPrice: offerPrice ? parseFloat(offerPrice) : undefined
@@ -73,12 +76,31 @@ export default function Negotiations() {
 
   const handleStatusUpdate = async (status: 'accepted' | 'rejected') => {
     if (!selectedId) return;
+    if (status === 'rejected' && !isRejectModalOpen) {
+      setIsRejectModalOpen(true);
+      return;
+    }
+
     try {
       await negotiationApi.update(selectedId, { status });
       toast.success(`Negotiation ${status}`);
+      setIsRejectModalOpen(false);
       fetchNegotiations();
     } catch (error) {
       toast.error('Failed to update status');
+    }
+  };
+
+  const handleDeleteNegotiation = async () => {
+    if (!selectedId) return;
+    try {
+      await negotiationApi.delete(selectedId);
+      toast.success('Negotiation deleted');
+      setIsDeleteModalOpen(false);
+      setSelectedId(null);
+      fetchNegotiations();
+    } catch (error) {
+      toast.error('Failed to delete negotiation');
     }
   };
 
@@ -135,7 +157,7 @@ export default function Negotiations() {
                 }`} />
               </div>
               <p className="text-[11px] text-slate-600 line-clamp-1">
-                {neg.messages.length > 0 ? neg.messages[neg.messages.length - 1].text : 'No messages'}
+                {Array.isArray(neg.messages) && neg.messages.length > 0 ? neg.messages[neg.messages.length - 1].text : 'No messages'}
               </p>
             </button>
           ))}
@@ -166,6 +188,13 @@ export default function Negotiations() {
                 </div>
               </div>
               <div className="flex items-center gap-1">
+                <button 
+                  onClick={() => setIsDeleteModalOpen(true)}
+                  className="p-1.5 hover:bg-rose-50 text-slate-400 hover:text-rose-600 rounded-md transition-colors"
+                  title="Delete Negotiation"
+                >
+                  <Trash2 size={16} />
+                </button>
                 <button className="p-1.5 hover:bg-slate-100 rounded-md transition-colors text-slate-500">
                   <MoreVertical size={16} />
                 </button>
@@ -177,7 +206,7 @@ export default function Negotiations() {
               ref={scrollRef}
               className="flex-1 overflow-y-auto p-4 space-y-4"
             >
-              {selectedNeg.messages.map((msg) => {
+              {Array.isArray(selectedNeg.messages) && selectedNeg.messages.map((msg) => {
                 const isMe = msg.senderId === user?.uid;
                 return (
                   <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
@@ -266,6 +295,78 @@ export default function Negotiations() {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <AnimatePresence>
+        {isDeleteModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-xl shadow-xl w-full max-w-xs overflow-hidden p-4"
+            >
+              <div className="flex items-center gap-2 mb-2 text-rose-600">
+                <AlertTriangle size={18} />
+                <h3 className="text-sm font-bold">Delete Negotiation?</h3>
+              </div>
+              <p className="text-[11px] text-slate-600 mb-4">
+                This action cannot be undone. All messages and history for this negotiation will be permanently removed.
+              </p>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setIsDeleteModalOpen(false)}
+                  className="flex-1 px-3 py-1.5 rounded-lg border border-slate-200 text-[10px] font-medium hover:bg-slate-50 transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteNegotiation}
+                  className="flex-1 bg-rose-600 text-white px-3 py-1.5 rounded-lg text-[10px] font-medium hover:bg-rose-700 transition-all"
+                >
+                  Delete
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Reject Confirmation Modal */}
+      <AnimatePresence>
+        {isRejectModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-xl shadow-xl w-full max-w-xs overflow-hidden p-4"
+            >
+              <div className="flex items-center gap-2 mb-2 text-amber-600">
+                <AlertTriangle size={18} />
+                <h3 className="text-sm font-bold">Reject Negotiation?</h3>
+              </div>
+              <p className="text-[11px] text-slate-600 mb-4">
+                Are you sure you want to reject this negotiation? This will end the conversation and mark the status as rejected.
+              </p>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setIsRejectModalOpen(false)}
+                  className="flex-1 px-3 py-1.5 rounded-lg border border-slate-200 text-[10px] font-medium hover:bg-slate-50 transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handleStatusUpdate('rejected')}
+                  className="flex-1 bg-rose-600 text-white px-3 py-1.5 rounded-lg text-[10px] font-medium hover:bg-rose-700 transition-all"
+                >
+                  Reject
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -110,9 +110,9 @@ export default function Dashboard() {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
         {[
-          { label: 'Total Sales', value: `$${stats?.totalVolume.toFixed(2) || '0.00'}`, icon: ShoppingBag, color: 'bg-blue-500' },
-          { label: 'Commission Paid', value: `$${stats?.totalCommission.toFixed(2) || '0.00'}`, icon: DollarSign, color: 'bg-rose-500' },
-          { label: 'Net Income', value: `$${stats?.netIncome.toFixed(2) || '0.00'}`, icon: TrendingUp, color: 'bg-emerald-500' },
+          { label: 'Total Sales', value: `$${stats?.totalVolume?.toFixed(2) || '0.00'}`, icon: ShoppingBag, color: 'bg-blue-500' },
+          { label: 'Commission Paid', value: `$${stats?.totalCommission?.toFixed(2) || '0.00'}`, icon: DollarSign, color: 'bg-rose-500' },
+          { label: 'Net Income', value: `$${stats?.netIncome?.toFixed(2) || '0.00'}`, icon: TrendingUp, color: 'bg-emerald-500' },
           { label: 'Active Negotiations', value: stats?.negotiations || 0, icon: MessageSquare, color: 'bg-amber-500' },
         ].map((stat, index) => (
           <motion.div

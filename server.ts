@@ -233,9 +233,15 @@ async function startServer() {
     const acceptedNegotiations = await db.all('SELECT messages FROM negotiations WHERE businessId = ? AND status = "accepted"', [business.id]);
     let totalVolume = 0;
     acceptedNegotiations.forEach(n => {
-      const messages = JSON.parse(n.messages);
-      const lastOffer = [...messages].reverse().find(m => m.offerPrice);
-      if (lastOffer) totalVolume += lastOffer.offerPrice;
+      try {
+        const messages = JSON.parse(n.messages);
+        if (Array.isArray(messages)) {
+          const lastOffer = [...messages].reverse().find(m => m.offerPrice);
+          if (lastOffer) totalVolume += lastOffer.offerPrice;
+        }
+      } catch (e) {
+        console.error('Error parsing messages:', e);
+      }
     });
 
     const commissionRateSetting = await db.get('SELECT value FROM settings WHERE key = "commission_rate"');
@@ -336,7 +342,16 @@ async function startServer() {
     }
 
     const negotiations = await db.all(query, params);
-    res.json(negotiations.map(n => ({ ...n, messages: JSON.parse(n.messages) })));
+    res.json(negotiations.map(n => {
+      let messages = [];
+      try {
+        messages = JSON.parse(n.messages);
+        if (!Array.isArray(messages)) messages = [];
+      } catch (e) {
+        console.error('Error parsing messages:', e);
+      }
+      return { ...n, messages };
+    }));
   });
 
   app.post('/api/negotiations', authenticateToken, async (req: any, res) => {
@@ -359,6 +374,11 @@ async function startServer() {
       'UPDATE negotiations SET status = ?, messages = ?, updatedAt = ? WHERE id = ?',
       [status, JSON.stringify(messages), now, req.params.id]
     );
+    res.json({ success: true });
+  });
+
+  app.delete('/api/negotiations/:id', authenticateToken, async (req: any, res) => {
+    await db.run('DELETE FROM negotiations WHERE id = ?', [req.params.id]);
     res.json({ success: true });
   });
 
@@ -407,9 +427,15 @@ async function startServer() {
     const acceptedNegotiations = await db.all('SELECT messages FROM negotiations WHERE status = "accepted"');
     let totalVolume = 0;
     acceptedNegotiations.forEach(n => {
-      const messages = JSON.parse(n.messages);
-      const lastOffer = [...messages].reverse().find(m => m.offerPrice);
-      if (lastOffer) totalVolume += lastOffer.offerPrice;
+      try {
+        const messages = JSON.parse(n.messages);
+        if (Array.isArray(messages)) {
+          const lastOffer = [...messages].reverse().find(m => m.offerPrice);
+          if (lastOffer) totalVolume += lastOffer.offerPrice;
+        }
+      } catch (e) {
+        console.error('Error parsing messages:', e);
+      }
     });
 
     const commissionRateSetting = await db.get('SELECT value FROM settings WHERE key = "commission_rate"');
