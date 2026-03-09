@@ -74,69 +74,69 @@ export default function Settings() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div>
-        <h1 className="text-3xl font-bold mb-1">Settings</h1>
-        <p className="text-slate-500">Manage your account and business preferences.</p>
+        <h1 className="text-xl font-bold mb-0.5">Settings</h1>
+        <p className="text-xs text-slate-500">Manage your account and business preferences.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="card p-6"
+          className="card p-3"
         >
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-              <Store size={24} />
+          <div className="flex items-center gap-2.5 mb-3">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+              <Store size={18} />
             </div>
             <div>
-              <h2 className="text-xl font-bold">Business Management</h2>
-              <p className="text-sm text-slate-500">Register or update your business details.</p>
+              <h2 className="text-base font-bold">Business Management</h2>
+              <p className="text-[10px] text-slate-500">Register or update your business details.</p>
             </div>
           </div>
           
-          <div className="space-y-3">
+          <div className="space-y-2">
             <Link 
               to="/register-business"
-              className="flex items-center justify-between p-4 rounded-xl border border-slate-100 hover:bg-slate-50 transition-colors group"
+              className="flex items-center justify-between p-2.5 rounded-lg border border-slate-100 hover:bg-slate-50 transition-colors group"
             >
-              <span className="font-medium text-slate-700">Register New Business</span>
-              <Store className="text-slate-400 group-hover:text-primary transition-colors" size={20} />
+              <span className="text-sm font-medium text-slate-700">Register New Business</span>
+              <Store className="text-slate-400 group-hover:text-primary transition-colors" size={16} />
             </Link>
           </div>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="card p-6"
+          className="card p-3"
         >
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center">
-              <UserIcon size={24} />
+          <div className="flex items-center gap-2.5 mb-3">
+            <div className="w-8 h-8 rounded-lg bg-secondary/10 text-secondary flex items-center justify-center">
+              <UserIcon size={18} />
             </div>
             <div>
-              <h2 className="text-xl font-bold">Profile Settings</h2>
-              <p className="text-sm text-slate-500">Update your personal information.</p>
+              <h2 className="text-base font-bold">Profile Settings</h2>
+              <p className="text-[10px] text-slate-500">Update your personal information.</p>
             </div>
           </div>
           
-          <div className="space-y-3">
+          <div className="space-y-2">
             <button 
               onClick={() => setIsEditingProfile(true)}
-              className="w-full flex items-center justify-between p-4 rounded-xl border border-slate-100 hover:bg-slate-50 transition-colors group"
+              className="w-full flex items-center justify-between p-2.5 rounded-lg border border-slate-100 hover:bg-slate-50 transition-colors group"
             >
-              <span className="font-medium text-slate-700">Edit Profile</span>
-              <UserIcon className="text-slate-400 group-hover:text-secondary transition-colors" size={20} />
+              <span className="text-sm font-medium text-slate-700">Edit Profile</span>
+              <UserIcon className="text-slate-400 group-hover:text-secondary transition-colors" size={16} />
             </button>
             <button 
               onClick={() => setIsChangingPassword(true)}
-              className="w-full flex items-center justify-between p-4 rounded-xl border border-slate-100 hover:bg-slate-50 transition-colors group"
+              className="w-full flex items-center justify-between p-2.5 rounded-lg border border-slate-100 hover:bg-slate-50 transition-colors group"
             >
-              <span className="font-medium text-slate-700">Security & Password</span>
-              <Lock className="text-slate-400 group-hover:text-secondary transition-colors" size={20} />
+              <span className="text-sm font-medium text-slate-700">Security & Password</span>
+              <Lock className="text-slate-400 group-hover:text-secondary transition-colors" size={16} />
             </button>
           </div>
         </motion.div>
@@ -148,57 +148,57 @@ export default function Settings() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden"
+            className="bg-white rounded-xl shadow-xl w-full max-w-sm overflow-hidden"
           >
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-              <h3 className="text-xl font-bold">Edit Profile</h3>
-              <button onClick={() => setIsEditingProfile(false)} className="p-2 hover:bg-slate-100 rounded-lg">
-                <X size={20} />
+            <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+              <h3 className="text-base font-bold">Edit Profile</h3>
+              <button onClick={() => setIsEditingProfile(false)} className="p-1.5 hover:bg-slate-100 rounded-lg">
+                <X size={16} />
               </button>
             </div>
-            <form onSubmit={handleProfileUpdate} className="p-6 space-y-6">
-              <div className="flex flex-col items-center gap-4">
+            <form onSubmit={handleProfileUpdate} className="p-4 space-y-4">
+              <div className="flex flex-col items-center gap-2">
                 <div className="relative group">
-                  <div className="w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden border-2 border-slate-200">
+                  <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden border-2 border-slate-200">
                     {profileData.photoURL ? (
                       <img src={profileData.photoURL} alt="Profile" className="w-full h-full object-cover" />
                     ) : (
-                      <UserIcon size={40} className="text-slate-400" />
+                      <UserIcon size={24} className="text-slate-400" />
                     )}
                   </div>
                   <label className="absolute inset-0 flex items-center justify-center bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer rounded-full">
-                    <Camera size={24} />
+                    <Camera size={18} />
                     <input type="file" className="hidden" accept="image/*" onChange={handlePhotoUpload} />
                   </label>
                 </div>
-                <p className="text-xs text-slate-500">Click to upload new photo</p>
+                <p className="text-[10px] text-slate-500">Click to upload new photo</p>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700">Display Name</label>
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-slate-700">Display Name</label>
                 <input
                   type="text"
                   required
                   value={profileData.displayName}
                   onChange={(e) => setProfileData({ ...profileData, displayName: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none"
+                  className="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-sm focus:ring-1 focus:ring-primary outline-none"
                 />
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => setIsEditingProfile(false)}
-                  className="flex-1 px-4 py-3 rounded-xl border border-slate-200 font-medium hover:bg-slate-50"
+                  className="flex-1 px-3 py-1.5 rounded-lg border border-slate-200 text-sm font-medium hover:bg-slate-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="flex-1 btn-primary py-3 flex items-center justify-center gap-2"
+                  className="flex-1 btn-primary py-1.5 text-sm flex items-center justify-center gap-1.5"
                 >
-                  {isLoading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Save size={18} />}
+                  {isLoading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Save size={14} />}
                   Save Changes
                 </button>
               </div>
@@ -213,60 +213,60 @@ export default function Settings() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden"
+            className="bg-white rounded-xl shadow-xl w-full max-w-sm overflow-hidden"
           >
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-              <h3 className="text-xl font-bold">Security & Password</h3>
-              <button onClick={() => setIsChangingPassword(false)} className="p-2 hover:bg-slate-100 rounded-lg">
-                <X size={20} />
+            <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+              <h3 className="text-base font-bold">Security & Password</h3>
+              <button onClick={() => setIsChangingPassword(false)} className="p-1.5 hover:bg-slate-100 rounded-lg">
+                <X size={16} />
               </button>
             </div>
-            <form onSubmit={handlePasswordUpdate} className="p-6 space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700">Current Password</label>
+            <form onSubmit={handlePasswordUpdate} className="p-4 space-y-3">
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-slate-700">Current Password</label>
                 <input
                   type="password"
                   required
                   value={passwordData.currentPassword}
                   onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none"
+                  className="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-sm focus:ring-1 focus:ring-primary outline-none"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700">New Password</label>
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-slate-700">New Password</label>
                 <input
                   type="password"
                   required
                   value={passwordData.newPassword}
                   onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none"
+                  className="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-sm focus:ring-1 focus:ring-primary outline-none"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700">Confirm New Password</label>
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-slate-700">Confirm New Password</label>
                 <input
                   type="password"
                   required
                   value={passwordData.confirmPassword}
                   onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none"
+                  className="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-sm focus:ring-1 focus:ring-primary outline-none"
                 />
               </div>
 
-              <div className="flex gap-3 pt-4">
+              <div className="flex gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setIsChangingPassword(false)}
-                  className="flex-1 px-4 py-3 rounded-xl border border-slate-200 font-medium hover:bg-slate-50"
+                  className="flex-1 px-3 py-1.5 rounded-lg border border-slate-200 text-sm font-medium hover:bg-slate-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="flex-1 btn-primary py-3 flex items-center justify-center gap-2"
+                  className="flex-1 btn-primary py-1.5 text-sm flex items-center justify-center gap-1.5"
                 >
-                  {isLoading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Lock size={18} />}
+                  {isLoading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Lock size={14} />}
                   Update Password
                 </button>
               </div>

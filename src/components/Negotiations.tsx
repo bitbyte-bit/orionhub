@@ -83,8 +83,8 @@ export default function Negotiations() {
   };
 
   const filteredNegotiations = negotiations.filter(n => 
-    n.productId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    n.status.toLowerCase().includes(searchTerm.toLowerCase())
+    (n.productId?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+    (n.status?.toLowerCase() || '').includes(searchTerm.toLowerCase())
   );
 
   if (loading) {
@@ -96,55 +96,52 @@ export default function Negotiations() {
   }
 
   return (
-    <div className="h-[calc(100vh-8rem)] flex flex-col md:flex-row gap-6">
+    <div className="h-[calc(100vh-6rem)] flex flex-col md:flex-row gap-3">
       {/* Sidebar - Negotiation List */}
-      <div className="w-full md:w-80 flex flex-col gap-4">
+      <div className="w-full md:w-64 flex flex-col gap-2">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
           <input
             type="text"
-            placeholder="Search negotiations..."
+            placeholder="Search..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition-all"
+            className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-slate-200 text-xs focus:ring-1 focus:ring-primary outline-none transition-all"
           />
         </div>
 
-        <div className="flex-1 overflow-y-auto space-y-2 pr-2">
+        <div className="flex-1 overflow-y-auto space-y-1.5 pr-1">
           {filteredNegotiations.map((neg) => (
             <button
               key={neg.id}
               onClick={() => setSelectedId(neg.id)}
-              className={`w-full p-4 rounded-2xl text-left transition-all ${
+              className={`w-full p-2.5 rounded-xl text-left transition-all ${
                 selectedId === neg.id 
-                  ? 'bg-white shadow-md border-primary/20 border' 
+                  ? 'bg-white shadow-sm border-primary/20 border' 
                   : 'hover:bg-white/50 border-transparent border'
               }`}
             >
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
-                  <UserIcon size={20} />
+              <div className="flex items-center gap-2 mb-1">
+                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                  <UserIcon size={16} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-bold text-slate-900 truncate">Negotiation #{neg.id.slice(0, 5)}</p>
-                  <p className="text-xs text-slate-500 truncate">Product ID: {neg.productId.slice(0, 8)}</p>
+                  <p className="font-bold text-slate-900 text-xs truncate">Neg. #{neg.id.slice(0, 5)}</p>
+                  <p className="text-[10px] text-slate-500 truncate">ID: {neg.productId.slice(0, 8)}</p>
                 </div>
-                <div className={`w-2 h-2 rounded-full ${
+                <div className={`w-1.5 h-1.5 rounded-full ${
                   neg.status === 'pending' ? 'bg-amber-400' : 
                   neg.status === 'accepted' ? 'bg-emerald-400' : 'bg-rose-400'
                 }`} />
               </div>
-              <p className="text-sm text-slate-600 line-clamp-1">
-                {neg.messages.length > 0 ? neg.messages[neg.messages.length - 1].text : 'No messages yet'}
-              </p>
-              <p className="text-[10px] text-slate-400 mt-2 font-medium uppercase tracking-wider">
-                {neg.updatedAt ? format((neg.updatedAt as any).toDate(), 'MMM d, h:mm a') : 'Just now'}
+              <p className="text-[11px] text-slate-600 line-clamp-1">
+                {neg.messages.length > 0 ? neg.messages[neg.messages.length - 1].text : 'No messages'}
               </p>
             </button>
           ))}
           {filteredNegotiations.length === 0 && (
-            <div className="text-center py-8 text-slate-400">
-              <p className="text-sm">No negotiations found</p>
+            <div className="text-center py-4 text-slate-400">
+              <p className="text-[10px]">No negotiations</p>
             </div>
           )}
         </div>
@@ -155,22 +152,22 @@ export default function Negotiations() {
         {selectedNeg ? (
           <>
             {/* Chat Header */}
-            <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-white/50">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
-                  <UserIcon size={20} />
+            <div className="p-2.5 border-b border-slate-100 flex items-center justify-between bg-white/50">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                  <UserIcon size={16} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-900">Negotiation #{selectedNeg.id.slice(0, 8)}</h3>
-                  <p className="text-xs text-slate-500">Status: <span className={`font-medium uppercase ${
+                  <h3 className="font-bold text-slate-900 text-sm">Negotiation #{selectedNeg.id.slice(0, 8)}</h3>
+                  <p className="text-[10px] text-slate-500 uppercase">Status: <span className={`font-bold ${
                     selectedNeg.status === 'accepted' ? 'text-emerald-600' : 
                     selectedNeg.status === 'rejected' ? 'text-rose-600' : 'text-amber-600'
                   }`}>{selectedNeg.status}</span></p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-500">
-                  <MoreVertical size={20} />
+              <div className="flex items-center gap-1">
+                <button className="p-1.5 hover:bg-slate-100 rounded-md transition-colors text-slate-500">
+                  <MoreVertical size={16} />
                 </button>
               </div>
             </div>
@@ -178,99 +175,94 @@ export default function Negotiations() {
             {/* Messages */}
             <div 
               ref={scrollRef}
-              className="flex-1 overflow-y-auto p-6 space-y-6"
+              className="flex-1 overflow-y-auto p-4 space-y-4"
             >
               {selectedNeg.messages.map((msg) => {
                 const isMe = msg.senderId === user?.uid;
                 return (
                   <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[80%] space-y-1 ${isMe ? 'items-end' : 'items-start'}`}>
-                      <div className={`p-4 rounded-2xl shadow-sm ${
+                    <div className={`max-w-[85%] space-y-0.5 ${isMe ? 'items-end' : 'items-start'}`}>
+                      <div className={`p-2.5 rounded-xl shadow-sm ${
                         isMe 
                           ? 'bg-primary text-white rounded-tr-none' 
                           : 'bg-white text-slate-900 rounded-tl-none border border-slate-100'
                       }`}>
                         {msg.offerPrice && (
-                          <div className={`mb-2 p-2 rounded-lg flex items-center gap-2 text-sm font-bold ${
+                          <div className={`mb-1 p-1.5 rounded-md flex items-center gap-1.5 text-xs font-bold ${
                             isMe ? 'bg-white/20' : 'bg-primary/10 text-primary'
                           }`}>
-                            <DollarSign size={16} />
+                            <DollarSign size={14} />
                             Offer: ${msg.offerPrice}
                           </div>
                         )}
-                        <p className="text-sm leading-relaxed">{msg.text}</p>
+                        <p className="text-xs leading-relaxed">{msg.text}</p>
                       </div>
-                      <p className="text-[10px] text-slate-400 font-medium px-1">
+                      <p className="text-[9px] text-slate-400 font-medium px-1">
                         {format(msg.timestamp, 'h:mm a')}
                       </p>
                     </div>
                   </div>
                 );
               })}
-              {selectedNeg.messages.length === 0 && (
-                <div className="text-center py-12 text-slate-400">
-                  <p>No messages yet. Start the negotiation!</p>
-                </div>
-              )}
             </div>
 
             {/* Input Area */}
-            <div className="p-4 bg-white border-t border-slate-100">
-              <form onSubmit={handleSendMessage} className="space-y-4">
-                <div className="flex items-center gap-3">
+            <div className="p-3 bg-white border-t border-slate-100">
+              <form onSubmit={handleSendMessage} className="space-y-2.5">
+                <div className="flex items-center gap-2">
                   <div className="relative flex-1">
                     <input
                       type="text"
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Type your message..."
-                      className="w-full pl-4 pr-12 py-3 rounded-xl bg-slate-50 border-none focus:ring-2 focus:ring-primary outline-none transition-all"
+                      placeholder="Type message..."
+                      className="w-full pl-3 pr-10 py-2 rounded-lg bg-slate-50 border-none text-xs focus:ring-1 focus:ring-primary outline-none transition-all"
                     />
                     <button 
                       type="submit"
                       disabled={!message.trim()}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors disabled:opacity-50"
+                      className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 text-primary hover:bg-primary/10 rounded-md transition-colors disabled:opacity-50"
                     >
-                      <Send size={20} />
+                      <Send size={16} />
                     </button>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="relative w-32">
-                    <DollarSign className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
+                <div className="flex items-center gap-1.5">
+                  <div className="relative w-24">
+                    <DollarSign className="absolute left-1.5 top-1/2 -translate-y-1/2 text-slate-400" size={12} />
                     <input
                       type="number"
                       value={offerPrice}
                       onChange={(e) => setOfferPrice(e.target.value)}
                       placeholder="Offer"
-                      className="w-full pl-7 pr-2 py-2 rounded-lg bg-slate-50 border-none text-sm focus:ring-2 focus:ring-primary outline-none transition-all"
+                      className="w-full pl-6 pr-1.5 py-1.5 rounded-md bg-slate-50 border-none text-[11px] focus:ring-1 focus:ring-primary outline-none transition-all"
                     />
                   </div>
                   <button 
                     type="button" 
                     onClick={() => handleStatusUpdate('accepted')}
-                    className="px-4 py-2 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-600 hover:bg-emerald-200 transition-colors flex items-center gap-1"
+                    className="px-2.5 py-1.5 rounded-md text-[10px] font-bold bg-emerald-100 text-emerald-600 hover:bg-emerald-200 transition-colors flex items-center gap-1"
                   >
-                    <CheckCircle2 size={14} /> Accept Deal
+                    <CheckCircle2 size={12} /> Accept
                   </button>
                   <button 
                     type="button" 
                     onClick={() => handleStatusUpdate('rejected')}
-                    className="px-4 py-2 rounded-lg text-xs font-bold bg-rose-100 text-rose-600 hover:bg-rose-200 transition-colors flex items-center gap-1"
+                    className="px-2.5 py-1.5 rounded-md text-[10px] font-bold bg-rose-100 text-rose-600 hover:bg-rose-200 transition-colors flex items-center gap-1"
                   >
-                    <XCircle size={14} /> Reject
+                    <XCircle size={12} /> Reject
                   </button>
                 </div>
               </form>
             </div>
           </>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-slate-400 p-8 text-center">
-            <div className="w-20 h-20 rounded-full bg-slate-50 flex items-center justify-center mb-6">
-              <MessageSquare size={40} />
+          <div className="flex-1 flex flex-col items-center justify-center text-slate-400 p-6 text-center">
+            <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mb-4">
+              <MessageSquare size={32} />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">No Negotiation Selected</h3>
-            <p className="max-w-xs">Select a conversation from the list to start negotiating with your customers.</p>
+            <h3 className="text-lg font-bold text-slate-900 mb-1.5">No Negotiation Selected</h3>
+            <p className="text-xs max-w-[200px]">Select a conversation from the list to start negotiating.</p>
           </div>
         )}
       </div>

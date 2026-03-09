@@ -89,22 +89,26 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-3">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
         <div>
-          <h1 className="text-3xl font-bold mb-1">Welcome back!</h1>
-          <p className="text-slate-500">Here's what's happening with your business today.</p>
+          <h1 className="text-lg font-bold mb-0.5">Welcome back!</h1>
+          <p className="text-[10px] text-slate-500">Here's what's happening with your business today.</p>
         </div>
-        <div className="flex items-center gap-3">
-          <Link to="/products" className="btn-primary py-2 px-4 text-sm flex items-center gap-2">
-            <Plus size={18} />
+        <div className="flex items-center gap-2">
+          <Link to="/marketplace" className="btn-secondary py-1.5 px-3 text-xs flex items-center gap-1.5">
+            <ShoppingBag size={14} />
+            Marketplace
+          </Link>
+          <Link to="/products" className="btn-primary py-1.5 px-3 text-xs flex items-center gap-1.5">
+            <Plus size={14} />
             Manage Products
           </Link>
         </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
         {[
           { label: 'Total Sales', value: `$${stats?.totalVolume.toFixed(2) || '0.00'}`, icon: ShoppingBag, color: 'bg-blue-500' },
           { label: 'Commission Paid', value: `$${stats?.totalCommission.toFixed(2) || '0.00'}`, icon: DollarSign, color: 'bg-rose-500' },
@@ -113,34 +117,34 @@ export default function Dashboard() {
         ].map((stat, index) => (
           <motion.div
             key={index}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="card"
+            transition={{ delay: index * 0.05 }}
+            className="card p-2.5"
           >
-            <div className="flex items-center justify-between mb-4">
-              <div className={`w-10 h-10 rounded-xl ${stat.color} text-white flex items-center justify-center`}>
-                <stat.icon size={20} />
+            <div className="flex items-center justify-between mb-1.5">
+              <div className={`w-7 h-7 rounded-lg ${stat.color} text-white flex items-center justify-center`}>
+                <stat.icon size={14} />
               </div>
             </div>
-            <p className="text-sm font-medium text-slate-500 mb-1">{stat.label}</p>
-            <h3 className="text-2xl font-bold">{stat.value}</h3>
+            <p className="text-[9px] font-medium text-slate-500 mb-0.5">{stat.label}</p>
+            <h3 className="text-base font-bold">{stat.value}</h3>
           </motion.div>
         ))}
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="card">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="font-bold text-lg">Revenue Overview</h3>
-            <select className="bg-slate-50 border-none text-sm font-medium rounded-lg px-2 py-1 outline-none">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        <div className="card p-2.5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-bold text-xs">Revenue Overview</h3>
+            <select className="bg-slate-50 border border-slate-200 text-[9px] font-medium rounded-md px-1.5 py-0.5 outline-none">
               <option>Last 7 days</option>
               <option>Last 30 days</option>
               <option>Last year</option>
             </select>
           </div>
-          <div className="h-[300px] w-full">
+          <div className="h-[150px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={data}>
                 <defs>
@@ -150,41 +154,41 @@ export default function Dashboard() {
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 9, fill: '#64748b' }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 9, fill: '#64748b' }} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                  contentStyle={{ backgroundColor: '#fff', borderRadius: '6px', border: 'none', boxShadow: '0 2px 4px -1px rgb(0 0 0 / 0.1)', fontSize: '9px' }}
                 />
-                <Area type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorValue)" />
+                <Area type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={1.5} fillOpacity={1} fill="url(#colorValue)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="card">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="font-bold text-lg">Recent Activity</h3>
-            <button className="text-primary text-sm font-medium hover:underline">View all</button>
+        <div className="card p-2.5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-bold text-xs">Recent Activity</h3>
+            <button className="text-primary text-[9px] font-medium hover:underline">View all</button>
           </div>
-          <div className="space-y-6">
+          <div className="space-y-2">
             {recentActivity.map((activity) => (
               <div key={activity.id} className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                <div className="flex items-center gap-2">
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center ${
                     activity.type === 'sale' ? 'bg-emerald-100 text-emerald-600' : 
                     activity.type === 'negotiation' ? 'bg-amber-100 text-amber-600' : 'bg-blue-100 text-blue-600'
                   }`}>
-                    {activity.type === 'sale' ? <ShoppingBag size={18} /> : 
-                     activity.type === 'negotiation' ? <MessageSquare size={18} /> : <Users size={18} />}
+                    {activity.type === 'sale' ? <ShoppingBag size={12} /> : 
+                     activity.type === 'negotiation' ? <MessageSquare size={12} /> : <Users size={12} />}
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-slate-900">{activity.user}</p>
-                    <p className="text-xs text-slate-500">{activity.time} • {activity.type}</p>
+                    <p className="text-[11px] font-bold text-slate-900 leading-tight">{activity.user}</p>
+                    <p className="text-[9px] text-slate-500 leading-tight">{activity.time} • {activity.type}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-bold text-slate-900">{activity.amount}</p>
-                  <p className={`text-xs font-medium uppercase tracking-wider ${
+                  <p className="text-[11px] font-bold text-slate-900 leading-tight">{activity.amount}</p>
+                  <p className={`text-[9px] font-medium uppercase tracking-wider leading-tight ${
                     activity.status === 'completed' ? 'text-emerald-600' : 
                     activity.status === 'pending' ? 'text-amber-600' : 'text-blue-600'
                   }`}>{activity.status}</p>

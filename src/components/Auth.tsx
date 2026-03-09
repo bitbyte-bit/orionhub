@@ -56,44 +56,44 @@ export default function Auth({ type }: AuthProps) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50 relative overflow-hidden">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 rounded-full blur-3xl -z-10" />
+    <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50 relative overflow-hidden">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 rounded-full blur-3xl -z-10" />
       
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md"
+        className="w-full max-w-sm"
       >
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-xl">
+        <div className="text-center mb-4">
+          <Link to="/" className="inline-flex items-center gap-2 mb-4">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-lg">
               Z
             </div>
-            <span className="text-2xl font-bold gradient-text">{APP_NAME}</span>
+            <span className="text-xl font-bold gradient-text">{APP_NAME}</span>
           </Link>
-          <h2 className="text-3xl font-bold mb-2">
+          <h2 className="text-xl font-bold mb-1">
             {type === 'login' ? 'Welcome Back' : 'Join Zionn'}
           </h2>
-          <p className="text-slate-500">
+          <p className="text-xs text-slate-500">
             {type === 'login' 
               ? 'Enter your credentials to access your dashboard' 
               : 'Create an account to start your business journey'}
           </p>
         </div>
 
-        <div className="card p-8">
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="card p-4">
+          <form onSubmit={handleSubmit} className="space-y-3">
             {type === 'register' && (
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
+                <label className="block text-xs font-medium text-slate-700 mb-1">Full Name</label>
                 <div className="relative">
-                  <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                  <UserIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
                   <input
                     type="text"
                     required
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                    className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-slate-200 text-sm focus:ring-1 focus:ring-primary outline-none transition-all"
                     placeholder="John Doe"
                   />
                 </div>
@@ -101,30 +101,30 @@ export default function Auth({ type }: AuthProps) {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
+              <label className="block text-xs font-medium text-slate-700 mb-1">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                <Mail className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                  className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-slate-200 text-sm focus:ring-1 focus:ring-primary outline-none transition-all"
                   placeholder="you@example.com"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+              <label className="block text-xs font-medium text-slate-700 mb-1">Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                <Lock className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
                 <input
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                  className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-slate-200 text-sm focus:ring-1 focus:ring-primary outline-none transition-all"
                   placeholder="••••••••"
                 />
               </div>
@@ -133,44 +133,44 @@ export default function Auth({ type }: AuthProps) {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full btn-primary py-3 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full btn-primary py-2 text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
                 <>
                   {type === 'login' ? 'Sign In' : 'Create Account'}
-                  <ArrowRight size={18} />
+                  <ArrowRight size={16} />
                 </>
               )}
             </button>
           </form>
 
-          <div className="relative my-8">
+          <div className="relative my-4">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-slate-200"></div>
             </div>
-            <div className="relative flex justify-center text-sm">
+            <div className="relative flex justify-center text-[10px]">
               <span className="px-2 bg-white text-slate-500">Or continue with</span>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <button
               onClick={handleGoogleSignIn}
-              className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors font-medium text-slate-700"
+              className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors font-medium text-slate-700 text-xs"
             >
-              <Chrome size={18} />
+              <Chrome size={14} />
               Google
             </button>
-            <button className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors font-medium text-slate-700">
-              <Github size={18} />
+            <button className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors font-medium text-slate-700 text-xs">
+              <Github size={14} />
               GitHub
             </button>
           </div>
         </div>
 
-        <p className="text-center mt-8 text-slate-600">
+        <p className="text-center mt-6 text-xs text-slate-600">
           {type === 'login' ? (
             <>
               Don't have an account?{' '}

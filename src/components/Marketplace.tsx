@@ -54,8 +54,8 @@ export default function Marketplace() {
   };
 
   const filteredProducts = products.filter(p => {
-    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         p.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = (p.name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) || 
+                         (p.description?.toLowerCase() || '').includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -69,32 +69,32 @@ export default function Marketplace() {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-3">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
         <div>
-          <h1 className="text-3xl font-bold mb-1">Marketplace</h1>
-          <p className="text-slate-500">Discover products and services from businesses around the world.</p>
+          <h1 className="text-lg font-bold mb-0.5">Marketplace</h1>
+          <p className="text-[10px] text-slate-500">Discover products and services from businesses around the world.</p>
         </div>
       </div>
 
-      <div className="card p-4">
-        <div className="flex flex-col md:flex-row items-center gap-4">
+      <div className="card p-2">
+        <div className="flex flex-col md:flex-row items-center gap-2">
           <div className="relative flex-1 w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400" size={12} />
             <input
               type="text"
               placeholder="Search products..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition-all"
+              className="w-full pl-7 pr-2 py-1 rounded-lg border border-slate-200 text-[11px] focus:ring-1 focus:ring-primary outline-none transition-all"
             />
           </div>
-          <div className="flex items-center gap-2 w-full md:w-auto">
-            <Filter className="text-slate-400" size={18} />
+          <div className="flex items-center gap-1.5 w-full md:w-auto">
+            <Filter className="text-slate-400" size={12} />
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="bg-slate-50 border border-slate-200 text-sm font-medium rounded-xl px-4 py-2 outline-none w-full md:w-48"
+              className="bg-slate-50 border border-slate-200 text-[10px] font-medium rounded-lg px-2 py-1 outline-none w-full md:w-28"
             >
               <option value="All">All Categories</option>
               {PRODUCT_CATEGORIES.map((cat) => (
@@ -105,13 +105,13 @@ export default function Marketplace() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
         {filteredProducts.map((product, index) => (
           <motion.div
             key={product.id}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.05 }}
+            transition={{ delay: index * 0.03 }}
             className="card p-0 overflow-hidden group"
           >
             <div className="relative aspect-square overflow-hidden bg-slate-100">
@@ -124,39 +124,38 @@ export default function Marketplace() {
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-slate-300">
-                  <ShoppingBag size={48} />
+                  <ShoppingBag size={24} />
                 </div>
               )}
-              <div className="absolute top-2 right-2">
-                <span className="px-2 py-1 bg-white/90 backdrop-blur-sm rounded-lg text-xs font-bold text-slate-700 shadow-sm">
+              <div className="absolute top-1 right-1">
+                <span className="px-1 py-0.5 bg-white/90 backdrop-blur-sm rounded text-[8px] font-bold text-slate-700 shadow-sm">
                   {product.category}
                 </span>
               </div>
             </div>
-            <div className="p-4">
-              <h3 className="font-bold text-slate-900 mb-1 truncate">{product.name}</h3>
-              <p className="text-sm text-slate-500 line-clamp-2 mb-4 h-10">{product.description}</p>
-              <div className="flex items-center justify-between mb-4">
-                <p className="text-xl font-bold text-primary">${product.price}</p>
-                <div className="text-xs font-medium text-slate-400">
-                  {product.stock} available
+            <div className="p-2">
+              <h3 className="font-bold text-slate-900 text-xs mb-0.5 truncate">{product.name}</h3>
+              <p className="text-[9px] text-slate-500 line-clamp-2 mb-1.5 h-5 leading-tight">{product.description}</p>
+              <div className="flex items-center justify-between mb-1.5">
+                <p className="text-xs font-bold text-primary">${product.price}</p>
+                <div className="text-[9px] font-medium text-slate-400">
+                  {product.stock} left
                 </div>
               </div>
               <button 
                 onClick={() => handleStartNegotiation(product)}
-                className="w-full btn-primary py-2 text-sm flex items-center justify-center gap-2"
+                className="w-full btn-primary py-1 text-[10px] flex items-center justify-center gap-1"
               >
-                <MessageSquare size={16} />
+                <MessageSquare size={12} />
                 Negotiate
               </button>
             </div>
           </motion.div>
         ))}
         {filteredProducts.length === 0 && (
-          <div className="col-span-full text-center py-20 text-slate-400">
-            <ShoppingBag size={48} className="mx-auto mb-4 opacity-20" />
-            <p className="text-lg font-medium">No products found</p>
-            <p className="text-sm">Try adjusting your search or filters</p>
+          <div className="col-span-full text-center py-6 text-slate-400">
+            <ShoppingBag size={24} className="mx-auto mb-1.5 opacity-20" />
+            <p className="text-sm font-medium">No products found</p>
           </div>
         )}
       </div>
