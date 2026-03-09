@@ -52,3 +52,78 @@ export interface Message {
   timestamp: number;
   offerPrice?: number;
 }
+
+// New types for advanced features
+export interface Review {
+  id: string;
+  productId: string;
+  userId: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  verifiedPurchase: boolean;
+  helpful: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface WishlistItem {
+  id: string;
+  userId: string;
+  productId: string;
+  product: Product;
+  createdAt: number;
+}
+
+export interface Order {
+  id: string;
+  userId: string;
+  items: OrderItem[];
+  status: OrderStatus;
+  subtotal: number;
+  shipping: number;
+  tax: number;
+  discount: number;
+  total: number;
+  currency: string;
+  shippingAddress: Address;
+  billingAddress: Address;
+  paymentMethod: string;
+  paymentIntentId?: string;
+  paymentStatus: PaymentStatus;
+  trackingNumber?: string;
+  estimatedDelivery?: number;
+  notes?: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface OrderItem {
+  id: string;
+  productId: string;
+  productName: string;
+  productImage?: string;
+  quantity: number;
+  price: number;
+  total: number;
+}
+
+export type OrderStatus = 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
+export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded' | 'partially_refunded';
+
+export interface Address {
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  phone?: string;
+}
+
+export interface CartItem {
+  id: string;
+  productId: string;
+  product: Product;
+  quantity: number;
+  addedAt: number;
+}
