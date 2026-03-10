@@ -1,0 +1,25 @@
+# Render.com deployment configuration
+# Documentation: https://render.com/docs/yaml
+
+services:
+  # Web application
+  - type: web
+    name: orionhub
+    env: node
+    buildCommand: npm ci && npm run build:all
+    startCommand: node dist/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+    autoDeploy: true
+
+  # PostgreSQL Database (uncomment to create managed database)
+  # databases:
+  #   - name: orionhub
+  #     databaseName: orionhub
+  #     user: orionhub
+  #     plan: free

@@ -1,7 +1,6 @@
 import express from 'express';
 import { createServer as createViteServer } from 'vite';
-import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
+import pg from 'pg';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import multer from 'multer';
@@ -19,6 +18,68 @@ const __dirname = path.dirname(__filename);
 const PORT = 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'zionn-secret-key-2026';
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
+
+// Database configuration - supports both SQLite (local) and PostgreSQL (Render)
+const isPostgres = !!process.env.DATABASE_URL;
+
+// PostgreSQL pool
+const pool = new pg.Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: isPostgres ? { rejectUnauthorized: false } : false
+});
+
+// SQLite fallback (for local development)
+let sqliteDb: any = null;
+async function getSqliteDb() {
+  if (!sqliteDb) {
+    // Dynamic import for CommonJS module
+    const sqlite3 = await import('sqlite3');
+    const { open } = await import('sqlite');
+    sqliteDb = await open({
+      filename: './database.sqlite',
+      driver: sqlite3.Database
+    });
+  }
+  return sqliteDb;
+}
+
+// Database wrapper for SQLite-like API
+const db = {
+  async get(sql: string, params: any[] = []) {
+    if (isPostgres) {
+      const result = await pool.query(sql, params);
+      return result.rows[0] || null;
+    } else {
+      const d = await getSqliteDb();
+      return d.get(sql, params);
+    }
+  },
+  async all(sql: string, params: any[] = []) {
+    if (isPostgres) {
+      const result = await pool.query(sql, params);
+      return result.rows;
+    } else {
+      const d = await getSqliteDb();
+      return d.all(sql, params);
+    }
+  },
+  async run(sql: string, params: any[] = []) {
+    if (isPostgres) {
+      return await pool.query(sql, params);
+    } else {
+      const d = await getSqliteDb();
+      return d.run(sql, params);
+    }
+  },
+  async exec(sql: string) {
+    if (isPostgres) {
+      return await pool.query(sql);
+    } else {
+      const d = await getSqliteDb();
+      return d.exec(sql);
+    }
+  }
+};
 
 // Ensure uploads directory exists
 if (!fs.existsSync(UPLOADS_DIR)) {

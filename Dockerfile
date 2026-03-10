@@ -22,7 +22,7 @@ FROM node:20-alpine AS production
 
 WORKDIR /app
 
-# Install production dependencies only
+# Install production dependencies
 COPY package*.json ./
 RUN npm ci --omit=dev
 
