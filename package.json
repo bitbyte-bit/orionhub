@@ -1,12 +1,15 @@
 {
-  "name": "react-example",
+  "name": "orionhub",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
     "build": "vite build",
+    "build:server": "tsc server.ts --outDir dist --module node --moduleResolution node --esModuleInterop --target es2020 --skipLibCheck --esModuleInterop",
+    "build:all": "vite build && npm run build:server",
     "preview": "vite preview",
+    "start": "node dist/server.js",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit"
   },

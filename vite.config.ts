@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
+import path from 'path';
+
 export default defineConfig({
   plugins: [
     react(),
@@ -140,7 +142,7 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true,
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks: {
@@ -153,7 +155,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': '/src',
+      '@': path.resolve(__dirname, './src'),
     },
   },
 });

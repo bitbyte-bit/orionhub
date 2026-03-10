@@ -148,6 +148,11 @@ async function startServer() {
 
   // --- API Routes ---
 
+  // Health check endpoint for production
+  app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok', timestamp: Date.now() });
+  });
+
   // Auth
   app.post('/api/auth/register', async (req, res) => {
     const { email, password, displayName, role } = req.body;
