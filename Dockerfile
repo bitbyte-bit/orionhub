@@ -11,9 +11,6 @@ COPY package*.json ./
 # Install dependencies
 RUN npm ci
 
-# Copy source code
-COPY . .
-
 # Build the application
 RUN npm run build
 
@@ -34,6 +31,10 @@ RUN addgroup -g 1001 -S nodejs && \
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/public ./public
 
+# Copy server.ts for tsx runtime
+COPY --from=builder /app/server.ts ./server.ts
+COPY --from=builder /app/package*.json ./package*.json
+
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=3000
@@ -48,5 +49,5 @@ USER nodejs
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
 
-# Start the application
-CMD ["node", "dist/server.js"]
+# Start the application with tsx
+CMD ["npx", "tsx", "server.ts"]
